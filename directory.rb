@@ -11,15 +11,16 @@ def input_students
 	puts "-----------------------------------------------"
 	puts "Please enter the name of the student."
 	name = gets.chomp
+
 	puts "Please enter the cohort for #{name}"
 	cohort = gets.chomp
-
+		
 	# Set default values if user input is nil
 	name = "Name unknown." if name.empty?
 	cohort = "Cohort unknown." if name.empty?
 
 	# Loop adds student information to students array
-	while !name.empty? && !cohort.empty? do 
+	while !name.empty? 
 		students << {:name => name, :cohort => cohort}
 		puts "You have added #{name} to the #{cohort} cohort."
 		puts "Now we have #{students.length} student" + "#{print_an_s(students)}"
@@ -32,10 +33,12 @@ def input_students
 		if response == 'yes'.downcase
 			puts "Please enter the name of the student."
 			name = gets.chomp
+			name = "Name unknown." if name.empty?
 			puts "Please enter the cohort for #{name}"
 			cohort = gets.chomp
-		else response == 'no'.downcase
-			break
+			cohort = "Cohort unknown." if cohort.empty?
+		else 
+			break if response == 'no'.downcase
 		end
 	end
 	students
