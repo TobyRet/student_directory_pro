@@ -3,7 +3,7 @@
 def interactive_menu
 	loop do 
 		print_menu
-		process(gets.chomp)
+		process(STDIN.gets.chomp)
 	end
 end
 
@@ -42,9 +42,9 @@ end
 
 def input_students
 	puts "Please enter the name of the student."
-	name = gets.chomp
+	name = STDIN.gets.chomp
 	puts "Please enter the cohort for #{name}"
-	cohort = gets.chomp	
+	cohort = STDIN.gets.chomp	
 	name = "Unknown." if name.empty? 
 	cohort = "Cohort unknown." if cohort.empty?
 	@students << {:name => name, :cohort => cohort}
@@ -71,6 +71,18 @@ def load_students(filename = "students.csv")
 		@students << {:name => name, :cohort => cohort.to_sym}
 	end
 	file.close
+end
+
+def try_load_students
+	filename = ARGV.first
+	return if filename.nil?
+	if File.exists?(filename)
+		load_students(filename)
+		puts "Loaded #{@students.length} from #{filename}"
+	else
+		puts "Sorry, #{filename} does not exist"
+		exit
+	end
 end
 
 # Add an 's' if number of sudents is greater than 1
@@ -102,4 +114,5 @@ def print_footer
 	puts "In total, we have #{@students.length} great student" + "#{print_an_s}.\n\n"
 end
 
+try_load_students
 interactive_menu
