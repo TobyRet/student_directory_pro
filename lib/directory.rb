@@ -1,63 +1,69 @@
-# Add an 's' if number of sudents is greater than 1
-def print_an_s(list)
-	's' if list.length != 1
+@students = []
+
+def interactive_menu
+	loop do 
+		print_menu
+		process(gets.chomp)
+	end
+end
+
+def print_menu
+	puts "Welcome to the Makers Academy Student Directory"
+	puts "-----------------------------------------------"
+	puts "1. Input students"
+	puts "2. Show the students"
+	puts "9. Exit"
+end
+
+def process(selection)
+	case selection
+	when "1"
+		input_students
+	when "2"
+		show_students
+	when "9"
+		exit
+	else 
+		puts "I don't understand that. Please try again."
+	end
+end
+
+def show_students
+	print_header
+	print_students_list
+	print_footer
 end
 
 def input_students
-	students = []
-
-	# Retreive user input
-	puts "Welcome to the Makers Academy Student Directory"
-	puts "-----------------------------------------------"
 	puts "Please enter the name of the student."
 	name = gets.chomp
-
 	puts "Please enter the cohort for #{name}"
-	cohort = gets.chomp
-		
-	# Set default values if user input is nil
-	name = "Name unknown." if name.empty?
-	cohort = "Cohort unknown." if name.empty?
+	cohort = gets.chomp	
+	name = "Unknown." if name.empty? 
+	cohort = "Cohort unknown." if cohort.empty?
+	@students << {:name => name, :cohort => cohort}
+	puts "You have added #{name} to the #{cohort} cohort."
+	puts "Now we have #{@students.length} student" + "#{print_an_s}\n\n"
+	@students
+end
 
-	# Loop adds student information to students array
-	while !name.empty? 
-		students << {:name => name, :cohort => cohort}
-		puts "You have added #{name} to the #{cohort} cohort."
-		puts "Now we have #{students.length} student" + "#{print_an_s(students)}"
-
-		# add more students
-		puts "----------------------------------------------"
-		puts "Would you like to add another student? Type 'yes' or 'no'."
-		response = gets.chomp
-		puts "----------------------------------------------"
-		if response == 'yes'.downcase
-			puts "Please enter the name of the student."
-			name = gets.chomp
-			name = "Name unknown." if name.empty?
-			puts "Please enter the cohort for #{name}"
-			cohort = gets.chomp
-			cohort = "Cohort unknown." if cohort.empty?
-		else 
-			break if response == 'no'.downcase
-		end
-	end
-	students
+# Add an 's' if number of sudents is greater than 1
+def print_an_s
+	's' if @students.length != 1
 end
 
 def print_header
 	puts "The students at Makers Academy:"
 end
 
-#def print(students)	
-#	students.each_with_index do |student|
-#		puts "#{students.index(student) + 1}. #{student[:name]} (#{student[:cohort]} cohort)" 
-#	end
-#end
+def print_students_list
+	@students.each_with_index do |student|
+		puts "#{@students.index(student) + 1}. #{student[:name]} (#{student[:cohort]} cohort)" 
+	end
+end
 
-# list students by cohort
 def print_cohort(students)
 	cl = students.map {|student| student[:cohort]}
-
 	cl.uniq.each do |cohort|
 		puts "\n" + cohort.upcase
 		students.each do |student|
@@ -66,12 +72,8 @@ def print_cohort(students)
 	end
 end
 
-#def print_footer(names)
-#	puts "In total, we have #{names.length} great student."
-#end
+def print_footer
+	puts "In total, we have #{@students.length} great student" + "#{print_an_s}.\n\n"
+end
 
-students = input_students
-print_header
-#print(students)
-print_cohort(students)
-#print_footer(students)
+interactive_menu
