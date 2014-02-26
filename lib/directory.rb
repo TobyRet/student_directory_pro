@@ -64,8 +64,8 @@ def save_students
 	puts "Students saved!"
 end
 
-def load_students
-	file = File.open("students.csv" ,"r")
+def load_students(filename = "students.csv")
+	file = File.open(filename ,"r")
 	file.readlines.each do |line|
 		name, cohort = line.chomp.split(',')
 		@students << {:name => name, :cohort => cohort.to_sym}
