@@ -7,6 +7,7 @@ def interactive_menu
 	end
 end
 
+# could this go into a hash
 def print_menu
 	puts "Welcome to the Makers Academy Student Directory"
 	puts "-----------------------------------------------"
@@ -17,6 +18,7 @@ def print_menu
 	puts "9. Exit"
 end
 
+# could this be converted to a hash?
 def process(selection)
 	case selection
 	when "1"
@@ -40,6 +42,7 @@ def show_students
 	print_footer
 end
 
+# could this be split into two methods? input then output
 def input_students
 	puts "Please enter the name of the student."
 	name = STDIN.gets.chomp
@@ -47,30 +50,34 @@ def input_students
 	cohort = STDIN.gets.chomp	
 	name = "Unknown." if name.empty? 
 	cohort = "Cohort unknown." if cohort.empty?
-	@students << {:name => name, :cohort => cohort}
+	shovel_students(name, cohort)
 	puts "You have added #{name} to the #{cohort} cohort."
 	puts "Now we have #{@students.length} student" + "#{print_an_s}\n\n"
 	@students
 end
 
 def save_students
-	file = File.open("students.csv", "w")
-	@students.each do |student|
-		student_data = [student[:name], student[:cohort]]
-		csv_line = student_data.join(",")
-		file.puts csv_line
+	File.open("students.csv", "w") do |file|
+		@students.each do |student|
+			student_data = [student[:name], student[:cohort]]
+			csv_line = student_data.join(",")
+			file.puts csv_line
+		end
 	end
-	file.close
 	puts "Students saved!"
 end
 
 def load_students(filename = "students.csv")
-	file = File.open(filename ,"r")
-	file.readlines.each do |line|
-		name, cohort = line.chomp.split(',')
-		@students << {:name => name, :cohort => cohort.to_sym}
+	File.open(filename ,"r") do |file|
+		file.readlines.each do |line|
+			name, cohort = line.chomp.split(',')
+			shovel_students(name, cohort)
+		end
 	end
-	file.close
+end
+
+def shovel_students(name, cohort)
+	@students << {:name => name, :cohort => cohort.to_sym}
 end
 
 def try_load_students
@@ -100,15 +107,15 @@ def print_students_list
 	end
 end
 
-def print_cohort(students)
-	cl = students.map {|student| student[:cohort]}
-	cl.uniq.each do |cohort|
-		puts "\n" + cohort.upcase
-		students.each do |student|
-			puts "* #{student[:name]}" if student[:cohort] == cohort	
-		end
-	end
-end
+#def print_cohort(students)
+#	cl = students.map {|student| student[:cohort]}
+#	cl.uniq.each do |cohort|
+#		puts "\n" + cohort.upcase
+#		students.each do |student|
+#			puts "* #{student[:name]}" if student[:cohort] == cohort	
+#		end
+#	end
+#end
 
 def print_footer
 	puts "In total, we have #{@students.length} great student" + "#{print_an_s}.\n\n"
