@@ -1,3 +1,5 @@
+require 'CSV'
+
 @students = []
 
 def interactive_menu
@@ -7,7 +9,6 @@ def interactive_menu
 	end
 end
 
-# could this go into a hash
 def print_menu
 	puts "Welcome to the Makers Academy Student Directory"
 	puts "-----------------------------------------------"
@@ -18,21 +19,14 @@ def print_menu
 	puts "9. Exit"
 end
 
-# could this be converted to a hash?
 def process(selection)
 	case selection
-	when "1"
-		input_students
-	when "2"
-		show_students
-	when "3"
-		save_students
-	when "4"
-		load_students
-	when "9"
-		exit
-	else 
-		puts "I don't understand that. Please try again."
+	when "1"; input_students;
+	when "2"; show_students;
+	when "3"; save_students;
+	when "4"; load_students;
+	when "9"; exit;
+	else; puts "I don't understand that. Please try again.";
 	end
 end
 
@@ -49,7 +43,7 @@ def input_students
 	puts "Please enter the cohort for #{name}"
 	cohort = STDIN.gets.chomp	
 	name = "Unknown." if name.empty? 
-	cohort = "Cohort unknown." if cohort.empty?
+	cohort = "Unknown." if cohort.empty?
 	shovel_students(name, cohort)
 	puts "You have added #{name} to the #{cohort} cohort."
 	puts "Now we have #{@students.length} student" + "#{print_an_s}\n\n"
@@ -57,21 +51,18 @@ def input_students
 end
 
 def save_students
-	File.open("students.csv", "w") do |file|
+	CSV.open("students.csv", "w") do |csv|
 		@students.each do |student|
-			student_data = [student[:name], student[:cohort]]
-			csv_line = student_data.join(",")
-			file.puts csv_line
+			csv << [student[:name], student[:cohort]]
 		end
 	end
 	puts "Students saved!"
 end
 
 def load_students(filename = "students.csv")
-	File.open(filename ,"r") do |file|
-		file.readlines.each do |line|
-			name, cohort = line.chomp.split(',')
-			shovel_students(name, cohort)
+	CSV.open(filename ,"r") do |csv|
+		csv.readlines.each do |student|
+			@students << {:name => student[0], :cohort => student[1]}
 		end
 	end
 end
