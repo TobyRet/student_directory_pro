@@ -14,8 +14,8 @@ def print_menu
 	puts "-----------------------------------------------"
 	puts "1. Input students"
 	puts "2. Show the students"
-	puts "3. Save the list to students.csv"
-	puts "4. Load the list from students.csv"
+	puts "3. Save the list to a file"
+	puts "4. Load the list from a file"
 	puts "9. Exit"
 end
 
@@ -23,8 +23,8 @@ def process(selection)
 	case selection
 	when "1"; input_students;
 	when "2"; show_students;
-	when "3"; save_students;
-	when "4"; load_students;
+	when "3"; get_file_save; 
+	when "4"; get_file_load;
 	when "9"; exit;
 	else; puts "I don't understand that. Please try again.";
 	end
@@ -49,8 +49,18 @@ def process_students (name = "Unknown", cohort = "Unknown")
 	@students
 end
 
-def save_students
-	CSV.open("students.csv", "w") do |csv|
+def get_file_save
+	puts "Enter the name of the file you wish to save to or press return to save to students.csv"
+	save_students(STDIN.gets.chomp)
+end
+
+def get_file_load
+	puts "Enter the name of the file you wish to import or press return to import from students.csv"
+	load_students(STDIN.gets.chomp)
+end
+
+def save_students(file = "students.csv")
+	CSV.open(file, "w") do |csv|
 		@students.each do |student|
 			csv << [student[:name], student[:cohort]]
 		end
@@ -59,7 +69,7 @@ def save_students
 end
 
 def load_students(filename = "students.csv")
-	CSV.open(filename ,"r") do |csv|
+	CSV.open(file ,"r") do |csv|
 		csv.readlines.each do |student|
 			@students << {:name => student[0], :cohort => student[1]}
 		end
