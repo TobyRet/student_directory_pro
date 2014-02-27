@@ -36,14 +36,13 @@ def show_students
 	print_footer
 end
 
-# could this be split into two methods? input then output
 def input_students
-	puts "Please enter the name of the student."
-	name = STDIN.gets.chomp
-	puts "Please enter the cohort for #{name}"
-	cohort = STDIN.gets.chomp	
-	name = "Unknown." if name.empty? 
-	cohort = "Unknown." if cohort.empty?
+	puts "Please enter the name of the student."; name = STDIN.gets.chomp;
+	puts "Please enter the cohort for #{name}"; cohort = STDIN.gets.chomp;
+	process_students(name, cohort)
+end
+
+def process_students (name = "Unknown", cohort = "Unknown")
 	shovel_students(name, cohort)
 	puts "You have added #{name} to the #{cohort} cohort."
 	puts "Now we have #{@students.length} student" + "#{print_an_s}\n\n"
@@ -83,13 +82,13 @@ def try_load_students
 	end
 end
 
-# Add an 's' if number of sudents is greater than 1
 def print_an_s
 	's' if @students.length != 1
 end
 
 def print_header
 	puts "The students at Makers Academy:"
+	puts "-------------------------------"
 end
 
 def print_students_list
